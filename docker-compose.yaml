@@ -1,49 +1,43 @@
-"version: ""3.3""
-networks:               #create  network
-  web-network: 
+#---------------------------------------------
+version: "3.3"
+
+#create  network
+networks:               
+  my-network:
     driver: bridge
 
+volumes:
+  my-db:
+#  h2g-wp:
+#---------------------------------------------
 services:
-
-  web-database:
+# name of services 1
+  my-database:
     image: mysql:latest
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: Abcd@@1234
-      MYSQL_PASSWORD: Abcd@@1234
-      MYSQL_DATABASE: web
-      MYSQL_USER: web    
+      MYSQL_ROOT_PASSWORD: my_strong_password
+      MYSQL_PASSWORD: my_strong_password
+      MYSQL_DATABASE: mydatabase
+      MYSQL_USER: username 
     volumes:
-      - ./db-v:/var/lib/mysql
-#    ports:
-#      - ""4407:3306""
+      - my-db:/var/lib/mysql
+    ports:
+      - "6306:3306"
     networks:
-      - web-network
+      - my-network
+
 #---------------------------------------------
+# name of services 2
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     restart: always
     environment:
-      PMA_HOST: web-database
+      PMA_HOST: my-database
     ports:
-      - ""9001:80""
+      - "8080:80"
     networks:
-      - web-network
+      - my-network
+
 #----------------------------------------------
-  wordpress:
-    image: wordpress
-    restart: always
-    container_name: home-web
-    ports:
-      - 8181:80          
-    environment:
-      WORDPRESS_DB_HOST: web-database
-#      WORDPRESS_DB_PORT: 3306
-      WORDPRESS_DB_USER: web
-      WORDPRESS_DB_PASSWORD: Abcd@@1234
-      WORDPRESS_DB_NAME: web    
-    volumes:
-      - ./wp-v:/var/www/html 
-    networks:
-      - web-network
-#END-------------------------------------------"
+#END-------------------------------------------
