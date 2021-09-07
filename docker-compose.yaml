@@ -1,0 +1,49 @@
+"version: ""3.3""
+networks:               #create  network
+  web-network: 
+    driver: bridge
+
+services:
+
+  web-database:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Abcd@@1234
+      MYSQL_PASSWORD: Abcd@@1234
+      MYSQL_DATABASE: web
+      MYSQL_USER: web    
+    volumes:
+      - ./db-v:/var/lib/mysql
+#    ports:
+#      - ""4407:3306""
+    networks:
+      - web-network
+#---------------------------------------------
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    environment:
+      PMA_HOST: web-database
+    ports:
+      - ""9001:80""
+    networks:
+      - web-network
+#----------------------------------------------
+  wordpress:
+    image: wordpress
+    restart: always
+    container_name: home-web
+    ports:
+      - 8181:80          
+    environment:
+      WORDPRESS_DB_HOST: web-database
+#      WORDPRESS_DB_PORT: 3306
+      WORDPRESS_DB_USER: web
+      WORDPRESS_DB_PASSWORD: Abcd@@1234
+      WORDPRESS_DB_NAME: web    
+    volumes:
+      - ./wp-v:/var/www/html 
+    networks:
+      - web-network
+#END-------------------------------------------"
