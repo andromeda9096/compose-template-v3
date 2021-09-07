@@ -6,12 +6,13 @@ networks:
   my-network:
     driver: bridge
 
+#create  volume
 volumes:
   my-db:
-#  h2g-wp:
+
 #---------------------------------------------
 services:
-# name of services 1
+# services 1
   my-database:
     image: mysql:latest
     restart: always
@@ -28,7 +29,7 @@ services:
       - my-network
 
 #---------------------------------------------
-# name of services 2
+# services 2
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     restart: always
